@@ -6,10 +6,11 @@
 
 #include "Value.hpp"
 
-void build_topo(Value v, std::vector<Value> &topo, std::set<double> &visited) {
+void build_topo(dgrad::Value v, std::vector<dgrad::Value> &topo,
+                std::set<double> &visited) {
   if (visited.find(v.val) == visited.end()) {
     visited.insert(v.val);
-    for (Value *child : v.children) {
+    for (dgrad::Value *child : v.children) {
       build_topo(*child, topo, visited);
     }
     topo.push_back(v);
