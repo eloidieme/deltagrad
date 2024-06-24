@@ -31,7 +31,7 @@ class Tensor {
         os << self.val[i] << ',';
       }
     }
-    os << "],grad=[";
+    os << ",grad=[";
     for (size_t i = 0; i < self.size; ++i) {
       if (i == self.size - 1) {
         os << self.grad[i] << ']';
@@ -39,21 +39,26 @@ class Tensor {
         os << self.grad[i] << ',';
       }
     }
-    os << "])";
+    os << ")";
     return os;
   }
   void backward();
+  static void set_nograd(const bool value) { nograd = value; }
 
   std::function<void()> _backward;
   std::vector<Tensor*> children;
   std::vector<double> val;
   std::vector<double> grad;
   double size;
+  static bool nograd;
 };
 
 // Operations
 Tensor add(Tensor* lhs, Tensor* rhs);
+Tensor subs(Tensor* lhs, Tensor* rhs);
 Tensor mult(Tensor* lhs, Tensor* rhs);
+Tensor div(Tensor* lhs, Tensor* rhs);
+Tensor dot(Tensor* lhs, Tensor* rhs);
 Tensor exp(Tensor* in);
 Tensor tanh(Tensor* in);
 Tensor relu(Tensor* in);

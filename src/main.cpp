@@ -5,20 +5,39 @@
 
 using dgrad::Tensor;
 
-int main(int argc, char *argv[argc + 1]) {
-  Tensor myVal = Tensor({4.2, 9.1, 3.0, 1.7});
-  Tensor myVal2 = Tensor({3.6, 4.21, 0.8, 12});
-  Tensor myVal3 = Tensor({1.2, 8.0, 9.1, 10.1});
+Tensor loss(Tensor x, Tensor y) {
+  // mean squared error loss
+  Tensor error = dgrad::subs(&x, &y);
+  Tensor loss = dgrad::dot(&error, &error);
+  Tensor n = Tensor({x.size});
+  Tensor mse = dgrad::div(&loss, &n);
+  return mse;
+}
 
-  Tensor result1 = dgrad::mult(&myVal, &myVal3);
-  Tensor result2 = dgrad::add(&result1, &myVal2);
-  Tensor result = dgrad::tanh(&result2);
-  result.backward();
+// forward declaration of static nograd flag
+// necessary for tensor operations
+bool Tensor::nograd;
 
-  std::cout << result << '\n';
-  std::cout << myVal << '\n';
-  std::cout << myVal2 << '\n';
-  std::cout << myVal3 << '\n';
+int main(void) {
+  Tensor X = Tensor({0, 1, 2, 3, 4, 5, 20, 100});
+  Tensor Y = Tensor({0, 1, 4, 9, 16, 25, 400, 10000});
+  Tensor W = Tensor({4.2, 9.1, 3.0, 1.7, 2.1, 3.5, 0.8, 1.3});
+  Tensor b = Tensor({1.2});
+
+  Tensor::set_nograd(false);
+  Tensor prod = dgrad::dot(&W, &X);
+  Tensor h = dgrad::add(&prod, &b);
+  Tensor::set_nograd(true);
+  Tensor v = dgrad::subs(&h, &b);
+  Tensor::set_nograd(false);
+  Tensor a = dgrad::tanh(&h);
+  a.backward();
+
+  std::cout << v << '\n';
+  std::cout << a << '\n';
+  std::cout << W << '\n';
+  std::cout << X << '\n';
+  std::cout << b << '\n';
 
   return EXIT_SUCCESS;
 }
