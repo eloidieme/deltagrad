@@ -16,12 +16,12 @@ class Value {
   }
   Value operator+(Value& other);
   Value operator*(Value& other);
+  Value exp();
   void backward();
 
   std::function<void()> _backward;
   std::vector<Value*> children;
   double val;
-  char op;
   double grad;
 };
 

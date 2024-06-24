@@ -10,7 +10,6 @@
 Value::Value(double value) {
   val = value;
   grad = 0.0;
-  op = ' ';
   _backward = []() {};
 }
 
@@ -18,7 +17,6 @@ Value Value::operator+(Value& other) {
   Value result = Value(val + other.val);
   result.children.push_back(this);
   result.children.push_back(&other);
-  result.op = '+';
 
   double* res_grad = &result.grad;
 
@@ -33,13 +31,25 @@ Value Value::operator*(Value& other) {
   Value result = Value(val * other.val);
   result.children.push_back(this);
   result.children.push_back(&other);
-  result.op = '*';
 
   double* res_grad = &result.grad;
 
   result._backward = [=, &other]() {
     this->grad += other.val * (*res_grad);
     other.grad += this->val * (*res_grad);
+  };
+
+  return result;
+}
+
+Value Value::exp(void) {
+  Value result = Value(std::exp(val));
+  result.children.push_back(this);
+
+  double* res_grad = &result.grad;
+
+  result._backward = [=]() {
+    this->grad += result.val * (*res_grad);
   };
 
   return result;

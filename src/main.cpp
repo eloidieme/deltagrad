@@ -9,7 +9,8 @@ int main(int argc, char *argv[argc + 1]) {
   Value myVal3 = 1.2;
 
   Value result1 = myVal * myVal3;
-  Value result = result1 + myVal2;
+  Value result2 = result1 + myVal2;
+  Value result = result2.exp();
   result.backward();
 
   std::cout << result;
