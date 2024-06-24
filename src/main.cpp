@@ -1,18 +1,18 @@
 // Copyright 2024 Eloi Dieme
 #include <iostream>
 
-#include "Value.hpp"
+#include "Tensor.hpp"
 
-using dgrad::Value;
+using dgrad::Tensor;
 
 int main(int argc, char *argv[argc + 1]) {
-  Value myVal = Value(4.2);
-  Value myVal2 = Value(3.6);
-  Value myVal3 = Value(1.2);
+  Tensor myVal = Tensor({4.2, 9.1, 3.0, 1.7});
+  Tensor myVal2 = Tensor({3.6, 4.21, 0.8, 12});
+  Tensor myVal3 = Tensor({1.2, 8.0, 9.1, 10.1});
 
-  Value result1 = dgrad::mult(&myVal, &myVal3);
-  Value result2 = dgrad::add(&result1, &myVal2);
-  Value result = dgrad::exp(&result2);
+  Tensor result1 = dgrad::mult(&myVal, &myVal3);
+  Tensor result2 = dgrad::add(&result1, &myVal2);
+  Tensor result = dgrad::tanh(&result2);
   result.backward();
 
   std::cout << result << '\n';
