@@ -19,6 +19,7 @@ Tensor loss(Tensor x, Tensor y) {
 bool Tensor::nograd;
 
 int main(void) {
+  /*
   Tensor X = Tensor({0, 1, 2, 3, 4, 5, 20, 100});
   Tensor Y = Tensor({0, 1, 4, 9, 16, 25, 400, 10000});
   Tensor W = Tensor({4.2, 9.1, 3.0, 1.7, 2.1, 3.5, 0.8, 1.3});
@@ -34,10 +35,25 @@ int main(void) {
   a.backward();
   a.zero_grad();
 
+  prod = dgrad::dot(&W, &X);
+  h = dgrad::add(&prod, &b);
+  v = dgrad::subs(&h, &b);
+  a = dgrad::tanh(&h);
+  a.backward();
+
   std::cout << v << '\n';
   std::cout << a << '\n';
   std::cout << W << '\n';
   std::cout << X << '\n';
+  std::cout << b << '\n';
+  */
+
+  Tensor a = Tensor({2.4});
+  Tensor b = Tensor({1.2});
+  Tensor c = dgrad::mult(&a, &b);
+  Tensor d = dgrad::tanh(&c);
+  d.backward();
+  std::cout << a << '\n';
   std::cout << b << '\n';
 
   return EXIT_SUCCESS;

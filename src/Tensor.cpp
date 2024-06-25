@@ -201,29 +201,27 @@ dgrad::Tensor dgrad::relu(dgrad::Tensor* in) {
 }
 
 void dgrad::Tensor::backward() {
-  std::vector<dgrad::Tensor> topo;
-  std::set<std::vector<double>> visited;
+  std::vector<dgrad::Tensor*> topo;
+  std::set<dgrad::Tensor*> visited;
 
-  build_topo(*this, topo, visited);
+  build_topo(this, topo, visited);
   for (size_t i = 0; i < size; ++i) {
     grad[i] = 1.0;
   }
   std::reverse(topo.begin(), topo.end());
-  for (dgrad::Tensor v : topo) {
-    v._backward();
+  for (dgrad::Tensor* v : topo) {
+    v->_backward();
   }
 }
 
 void dgrad::Tensor::zero_grad() {
-  std::vector<dgrad::Tensor> topo;
-  std::set<std::vector<double>> visited;
+  std::vector<dgrad::Tensor*> topo;
+  std::set<dgrad::Tensor*> visited;
 
-  build_topo(*this, topo, visited);
-  for (size_t i = 0; i < size; ++i) {
-    grad[i] = 0.0;
-  }
+  build_topo(this, topo, visited);
+  std::fill(grad.begin(), grad.end(), 0.0);
   std::reverse(topo.begin(), topo.end());
-  for (dgrad::Tensor v : topo) {
-    v._zero_grad();
+  for (dgrad::Tensor* v : topo) {
+    v->_zero_grad();
   }
 }

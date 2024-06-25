@@ -11,26 +11,16 @@ namespace dgrad {
 class Tensor {
  public:
   explicit Tensor(std::initializer_list<double> value)
-      : _zero_grad([=]() {
-          for (size_t i = 0; i < size; ++i) {
-            this->grad[i] = 0.0;
-          }
-        }),
-        _backward([]() {}),
-        val(value),
-        grad(value.size(), 0.0),
-        size(value.size()) {}
+      : val(value), grad(value.size(), 0.0), size(value.size()) {
+    _backward = []() {};
+    _zero_grad = [this]() { std::fill(grad.begin(), grad.end(), 0.0); };
+  }
 
   explicit Tensor(std::vector<double> value)
-      : _zero_grad([=]() {
-          for (size_t i = 0; i < size; ++i) {
-            this->grad[i] = 0.0;
-          }
-        }),
-        _backward([]() {}),
-        val(value),
-        grad(value.size(), 0.0),
-        size(value.size()) {}
+      : val(value), grad(value.size(), 0.0), size(value.size()) {
+    _backward = []() {};
+    _zero_grad = [this]() { std::fill(grad.begin(), grad.end(), 0.0); };
+  }
 
   friend std::ostream& operator<<(std::ostream& os, const Tensor& self) {
     os << "Tensor(data=[";
