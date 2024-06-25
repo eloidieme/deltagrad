@@ -32,6 +32,7 @@ int main(void) {
   Tensor::set_nograd(false);
   Tensor a = dgrad::tanh(&h);
   a.backward();
+  a.zero_grad();
 
   std::cout << v << '\n';
   std::cout << a << '\n';

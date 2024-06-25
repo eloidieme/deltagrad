@@ -213,3 +213,17 @@ void dgrad::Tensor::backward() {
     v._backward();
   }
 }
+
+void dgrad::Tensor::zero_grad() {
+  std::vector<dgrad::Tensor> topo;
+  std::set<std::vector<double>> visited;
+
+  build_topo(*this, topo, visited);
+  for (size_t i = 0; i < size; ++i) {
+    grad[i] = 0.0;
+  }
+  std::reverse(topo.begin(), topo.end());
+  for (dgrad::Tensor v : topo) {
+    v._zero_grad();
+  }
+}

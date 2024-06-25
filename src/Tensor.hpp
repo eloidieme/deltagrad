@@ -11,13 +11,23 @@ namespace dgrad {
 class Tensor {
  public:
   explicit Tensor(std::initializer_list<double> value)
-      : _backward([]() {}),
+      : _zero_grad([=]() {
+          for (size_t i = 0; i < size; ++i) {
+            this->grad[i] = 0.0;
+          }
+        }),
+        _backward([]() {}),
         val(value),
         grad(value.size(), 0.0),
         size(value.size()) {}
 
   explicit Tensor(std::vector<double> value)
-      : _backward([]() {}),
+      : _zero_grad([=]() {
+          for (size_t i = 0; i < size; ++i) {
+            this->grad[i] = 0.0;
+          }
+        }),
+        _backward([]() {}),
         val(value),
         grad(value.size(), 0.0),
         size(value.size()) {}
@@ -43,8 +53,10 @@ class Tensor {
     return os;
   }
   void backward();
+  void zero_grad();
   static void set_nograd(const bool value) { nograd = value; }
 
+  std::function<void()> _zero_grad;
   std::function<void()> _backward;
   std::vector<Tensor*> children;
   std::vector<double> val;
