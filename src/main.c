@@ -52,6 +52,12 @@ int main(void) {
   dg_DestroyTensor(&Y);
   dg_DestroyTensor(&W);
   dg_DestroyTensor(&b);
+  dg_DestroyTensor(&n);
+  dg_DestroyTensor(&prod);
+  dg_DestroyTensor(&h);
+  dg_DestroyTensor(&error);
+  dg_DestroyTensor(&loss);
+  dg_DestroyTensor(&L);
 
   return EXIT_SUCCESS;
 }
